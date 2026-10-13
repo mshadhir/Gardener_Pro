@@ -1,0 +1,10 @@
+import {Miniflare} from 'miniflare';
+import http from 'node:http';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const mf=new Miniflare({modules:true,scriptPath:'worker.js',compatibilityDate:'2026-05-01',d1Databases:{DB:'garden-pro'},d1Persist:'.wrangler/local-db'});
+const types={'.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.html':'text/html'};
+const port=Number(process.argv[process.argv.indexOf('--port')+1])||3000;
+const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://'+req.headers.host);if(url.pathname==='/__qa/mobile'){res.writeHead(200,{'Content-Type':'text/html'});res.end('<iframe title="Mobile preview" src="/" style="width:390px;height:844px;border:0"></iframe>');return;}if(url.pathname.startsWith('/api/')){const chunks=[];for await(const c of req)chunks.push(c);const r=await mf.dispatchFetch(url.href,{method:req.method,headers:req.headers,...(!['GET','HEAD'].includes(req.method)?{body:Buffer.concat(chunks)}:{})});res.writeHead(r.status,Object.fromEntries(r.headers));res.end(Buffer.from(await r.arrayBuffer()));}else{let name=url.pathname==='/'?'index.html':url.pathname.slice(1);if(!['index.html','app.js','style.css','icon.svg'].includes(name))name='index.html';res.writeHead(200,{'Content-Type':types[path.extname(name)]});res.end(await fs.readFile('public/'+name));}}catch(e){console.error(e.message);res.writeHead(500);res.end('Server error')}});
+server.listen(port,'0.0.0.0',()=>console.log('Gardener Pro local preview on port '+port));
+process.on('SIGTERM',()=>{server.close();mf.dispose()});
