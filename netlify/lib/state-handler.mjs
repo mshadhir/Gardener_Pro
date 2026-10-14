@@ -16,9 +16,9 @@ export function storeTarget(context) {
  if(context?.deploy?.id)return {production:false,name:'gardener-pro-preview-v1'};
  fail('Deployment storage context is unavailable.',503);
 }
-export function createHandler({getStoreForContext,allowedEmails}) {
+export function createHandler({getStoreForContext,allowedEmails,authenticate}) {
  return async function handler(request,context) {
-  const denied=accessError(context,allowedEmails());if(denied)return json({error:denied.error},denied.status);
+  const denied=authenticate?await authenticate(request,context):accessError(context,allowedEmails());if(denied)return json({error:denied.error},denied.status);
   const path=new URL(request.url).pathname;
   if(!['/api/state','/.netlify/functions/state'].includes(path))return json({error:'Not found'},404);
   if(!['GET','PUT'].includes(request.method))return json({error:'Method not allowed'},405);

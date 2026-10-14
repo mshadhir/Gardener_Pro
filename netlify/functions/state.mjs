@@ -1,8 +1,9 @@
+import {auth} from '../lib/auth-provider.mjs';
 import {getStore,getDeployStore} from '@netlify/blobs';
 import {createHandler,storeTarget} from '../lib/state-handler.mjs';
 import {checkedTransport} from '../lib/blob-transport.mjs';
 export default createHandler({
- allowedEmails:()=>process.env.GARDENER_ALLOWED_EMAILS,
+ authenticate:auth.authenticate,
  getStoreForContext(context){
   const target=storeTarget(context);
   const options={name:target.name,consistency:'strong',fetch:checkedTransport()};

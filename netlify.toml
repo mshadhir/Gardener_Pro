@@ -11,9 +11,11 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-[[edge_functions]]
-  path = "/*"
-  function = "private-access"
+[[redirects]]
+  from = "/api/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/api/*"

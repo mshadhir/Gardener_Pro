@@ -1,3 +1,7 @@
+# Current Netlify access
+
+The website has a public login page. Business data requires a shared workspace password configured as `GARDENER_PASSWORD` in Netlify. See [DEPLOYMENT.md](DEPLOYMENT.md) for current setup; this replaces earlier platform-private/allowlist instructions below.
+
 # Gardener Pro — Netlify deployment
 
 This branch is prepared for a **private, single-workspace Netlify deployment**. It is the current internal prototype, not the future multi-business employee system. All approved visitors have full access to this workspace. Crew entries are not login accounts.
