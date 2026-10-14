@@ -26,3 +26,9 @@ Shared password grants full manager access to one workspace; no individual emplo
 Sessions use opaque random tokens in Secure, HttpOnly, SameSite=Strict cookies. Hashed tokens, password fingerprints and expiry live in a separate strong-consistency Blobs store. Sign-out deletes the session; expired session records are denied but not automatically purged. The password itself exists only in the server environment. Same-origin checks protect login, logout and writes. Provider failure denies access.
 
 The legacy `private-access` edge source remains for old platform tests but is NOT declared or deployed as a route. The old Sites/worker build is retained separately; this guide applies to Netlify only.
+
+## Next visit reminders and scheduling
+
+Site create/edit and job completion include a Next visit reminder (up to 2,000 characters). The yellow reminder is shared by upcoming visits to that site and remains until manually cleared. Completed job cards do not show the current reminder; it is a live site reminder, not a historical snapshot. Existing records and backups without this field continue to work.
+
+On Schedule, drag the ↕ handle to another day or above/below another card to set visit order. Tap/click the handle for an accessible date and position form. Completed jobs cannot be dragged. Explicit start times and assignments remain unchanged; ordering does not check for time conflicts. Confirm drag on desktop and touch devices after deployment, plus persistence after refresh and conflict handling on two devices.
