@@ -4,6 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # This app uses static assets and functions, not the dashboard Next.js runtime.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [functions]
   directory = "netlify/functions"
