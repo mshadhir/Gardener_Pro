@@ -2,3 +2,7 @@ node_modules/
 .wrangler/
 dist/
 .openai/preview*
+.netlify/
+.env
+.env.*
+!.env.example
