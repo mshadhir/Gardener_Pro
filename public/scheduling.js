@@ -35,3 +35,11 @@ export function deferJob(data,id,reason,at=new Date().toISOString()){
  job.status='deferred';delete job.order;
  for(const entry of data.entries)if(entry.siteId===job.siteId&&!entry.end)entry.end=at;
 }
+
+export const siteTitle=s=>s?.name?.trim()||s?.address?.trim()||'Unknown site';
+export function estimatedMinutes(value){const match=String(value||'').match(/^(\d+(?:\.\d+)?)(h|m)$/);return match?Number(match[1])*(match[2]==='h'?60:1):0;}
+export function dayWorkload(jobs,sites){const map=new Map(sites.map(s=>[s.id,s]));return {count:jobs.length,minutes:jobs.reduce((n,j)=>n+estimatedMinutes(map.get(j.siteId)?.estimatedTime),0),remaining:jobs.filter(j=>j.status!=='completed').length};}
+export function appointmentOrderConflict(jobs){const last=new Map();for(const j of [...jobs].sort(compareJobs)){if(!j.time||j.status==='completed')continue;const key=j.date+':'+(j.crewId?'crew:'+j.crewId:'member:'+(j.memberId||'myself'));if(last.has(key)&&j.time<last.get(key))return true;last.set(key,j.time);}return false;}
+const scheduleFields=['date','time','order','status'];
+export function scheduleSnapshot(jobs){return jobs.map(j=>({id:j.id,...Object.fromEntries(scheduleFields.filter(k=>Object.hasOwn(j,k)).map(k=>[k,j[k]]))}));}
+export function restoreSchedule(jobs,snapshot){for(const previous of snapshot){const job=jobs.find(j=>j.id===previous.id);if(!job)throw new Error('The schedule changed. Reload before continuing.');for(const key of scheduleFields){if(Object.hasOwn(previous,key))job[key]=previous[key];else delete job[key];}}}

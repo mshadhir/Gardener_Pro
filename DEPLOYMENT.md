@@ -32,3 +32,13 @@ The legacy `private-access` edge source remains for old platform tests but is NO
 Site create/edit and job completion include a Next visit reminder (up to 2,000 characters). The yellow reminder is shared by upcoming visits to that site and remains until manually cleared. Completed job cards do not show the current reminder; it is a live site reminder, not a historical snapshot. Existing records and backups without this field continue to work.
 
 On Schedule, drag the ↕ handle to another day or above/below another card to set visit order. Tap/click the handle for an accessible date and position form. Completed jobs cannot be dragged. Explicit start times and assignments remain unchanged; ordering does not check for time conflicts. Confirm drag on desktop and touch devices after deployment, plus persistence after refresh and conflict handling on two devices.
+
+## Schedule usability and site titles
+
+Site name is optional; a nonblank address is required. Cards, job selection, time entries and history exports use the name when present, otherwise the full address. Existing names are not rewritten. The raw site CSV retains separate Name and Address columns.
+
+Schedule has Today/day, Week and Waiting views, address/name search, crew filtering, quick actions and estimated daily workload. Phones default to day view. Week columns scroll horizontally on narrow screens. Workload totals reflect the current filters and exclude deferred jobs; they show estimated job duration, not travel time or remaining timer duration. Appointment-order warnings check decreasing times for the same assignment/day; they are not full travel or availability conflict detection.
+
+Undo restores the most recent successful drag/reschedule/Do today operation in the current page session. It is cleared after another successful edit or a reload. The state API revision guard rejects conflicts with changes saved on other devices. Saving failures remain visible and are never presented as successful saves.
+
+Checks for this release: code-level render checks cover all quick controls, optional site labels and phone default. Test actual touch dragging, keyboard controls and desktop/mobile layout on the hosted deployment before accepting the UI release.
