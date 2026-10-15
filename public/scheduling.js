@@ -12,3 +12,17 @@ export function moveJob(jobs,id,date,beforeId=''){
  job.date=date;target.splice(index,0,job);target.forEach((j,i)=>j.order=i);
  if(oldDate!==date)jobs.filter(j=>j.date===oldDate).sort(compareJobs).forEach((j,i)=>j.order=i);
 }
+
+// An existing later open visit is the next booking, even after it is dragged
+// away from the nominal recurrence date. Do not overwrite its date or details.
+export function existingFollowUp(jobs,completedJob,nextDate){
+ return jobs.filter(j=>j.id!==completedJob.id&&j.siteId===completedJob.siteId&&
+  ((j.status!=='completed'&&j.date>completedJob.date)||(nextDate&&j.date===nextDate)))
+  .sort(compareJobs)[0]||null;
+}
+export function ensureFollowUp(jobs,completedJob,nextDate,makeId){
+ const existing=existingFollowUp(jobs,completedJob,nextDate);
+ if(existing||!nextDate)return existing;
+ const next={id:makeId(),siteId:completedJob.siteId,date:nextDate,time:completedJob.time,memberId:completedJob.memberId,crewId:completedJob.crewId,notes:'',status:'scheduled',photos:[]};
+ jobs.push(next);return next;
+}
