@@ -21,6 +21,8 @@ The Next.js runtime is skipped because this is a static app with Netlify Functio
 
 ## Limits
 
+Optional map-based weekly planning has a separate [Google Maps setup guide](ROUTING.md). It is disabled until the owner adds Google credentials and explicitly enables it in Netlify. The `routing` function uses the same shared-password sessions as the workspace API.
+
 Shared password grants full manager access to one workspace; no individual employee accounts, MFA, tenant isolation or audit attribution. This is an internal prototype, not a commercial multi-tenant release. No automatic backups; export JSON backups regularly. Workspace payload limit is 4 MiB including photos.
 
 Sessions use opaque random tokens in Secure, HttpOnly, SameSite=Strict cookies. Hashed tokens, password fingerprints and expiry live in a separate strong-consistency Blobs store. Sign-out deletes the session; expired session records are denied but not automatically purged. The password itself exists only in the server environment. Same-origin checks protect login, logout and writes. Provider failure denies access.

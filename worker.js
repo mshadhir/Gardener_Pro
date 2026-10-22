@@ -1,4 +1,5 @@
 import {normaliseAddressParts,formatAddress} from './public/addresses.js';
+import {routingSettings} from './public/route-planner.js';
 const MAX_BYTES = 8 * 1024 * 1024;
 export const emptyData = () => ({version:1,sites:[],jobs:[],members:[],crews:[],entries:[],settings:{name:'',company:'',phone:'',timezone:'Australia/Melbourne'}});
 const fail=(message,status=400)=>{throw Object.assign(new Error(message),{status})};
@@ -18,6 +19,8 @@ export function validate(data) {
  if(data.entries.filter(x=>!x.end).length>1)fail('Only one timer can run at a time.');
  for(const r of [...data.members,...data.crews])if(!str(r.name,200)||!r.name.trim())fail('A name is required.');
  for(const r of data.crews)if(!Array.isArray(r.memberIds)||r.memberIds.some(id=>!data.members.some(m=>m.id===id)))fail('Invalid crew members.');
+ if(data.settings.routing!==undefined)try{routingSettings(data.settings.routing);}catch{fail('Invalid route settings.');}
+ for(const s of data.sites)if(s.mapLocation!==undefined){const m=s.mapLocation;if(!m||!str(m.placeId,300)||! /^[A-Za-z0-9_-]+$/.test(m.placeId)||!str(m.sourceAddress,500)||typeof m.confirmed!=='boolean')fail('Invalid map location.');}
  if(!str(data.settings.name,200)||!str(data.settings.company,200)||!str(data.settings.phone,100)||!str(data.settings.timezone,100))fail('Invalid profile.');
  try{new Intl.DateTimeFormat('en-AU',{timeZone:data.settings.timezone})}catch{fail('Invalid time zone.')}
  return data;

@@ -18,6 +18,12 @@
   force = true
 
 [[redirects]]
+  from = "/api/routing"
+  to = "/.netlify/functions/routing"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/state"
   status = 200
